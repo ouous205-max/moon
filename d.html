@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday & Surprise!</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700&family=Poppins:wght@500;700&display=swap">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #fbe4e8 0%, #f7d6e0 50%, #f4cbda 100%);
+      font-family: 'Poppins', 'Nunito', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      gap: 15px;
+      max-width: 440px;
+      width: 90%;
+      margin: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 30px 25px;
+      border-radius: 28px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(224, 150, 170, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+    }
+
+    .container .tenor-gif-embed {
+      max-width: 180px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+      margin: 5px 0;
+    }
+
+    h1 {
+      font-family: "Brush Script MT", 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      font-weight: normal;
+      color: #7a3e52;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #a06275;
+    }
+
+    .container .btn {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .btn button, .btn a {
+      text-decoration: none;
+      font-family: 'Poppins', 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff; 
+      background: linear-gradient(135deg, #e87a90 0%, #d96b82 100%); 
+      padding: 12px 28px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(217, 107, 130, 0.25);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .btn button:hover, .btn a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(217, 107, 130, 0.35);
+    }
+
+    /* 🎵 AUDIO PLAYER STYLES */
+    .audio-player-box {
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #f2c2cf;
+      border-radius: 20px;
+      padding: 12px 18px;
+      margin: 5px 0;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(224, 150, 170, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .audio-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #d96b82;
+    }
+
+    audio {
+      width: 100%;
+      height: 35px;
+      outline: none;
+    }
+
+    /* 🎁 3D CARD STYLES */
+    .card-wrapper {
+      perspective: 1000px;
+      width: 280px;
+      height: 320px;
+      margin: 5px 0;
+      position: relative;
+    }
+
+    .card-3d {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-3d.open {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-inside {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, #f7a3b5 0%, #e87a90 100%);
+      color: white;
+      box-shadow: 0 12px 30px rgba(217, 107, 130, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+
+    .card-front h2 {
+      font-family: "Brush Script MT", 'Dancing Script', cursive;
+      font-size: 2.8rem;
+      font-weight: normal;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      margin-top: 15px;
+    }
+
+    .card-front .gift-icon {
+      font-size: 4rem;
+      animation: pulse 2s infinite;
+    }
+
+    .card-inside {
+      background: #ffffff;
+      color: #7a3e52;
+      border: 2px solid #f7d6e0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      text-align: center;
+      transform: rotateY(180deg);
+    }
+
+    .card-inside h3 {
+      font-family: "Brush Script MT", 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: #d96b82;
+      margin-bottom: 8px;
+    }
+
+    .card-inside p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #613342;
+      font-weight: 600;
+    }
+
+    .cake-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 5px;
+    }
+
+    .animated-love-box {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid #f2c2cf;
+      border-radius: 20px;
+      padding: 25px 20px;
+      margin: 15px 0;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(224, 150, 170, 0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 140px;
+    }
+
+    .lang-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #d96b82;
+      margin-bottom: 10px;
+      transition: opacity 0.2s ease;
+    }
+
+    .lang-phrase {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #7a3e52;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    .fade-in {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+  </style>
+  <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+</head>
+
+<body>
+
+  <!-- PAGE 1: HOME CARD -->
+  <div class="page active" id="page-home">
+    <div class="container">
+      
+      <!-- 🎵 MUSIC PLAYER CONTAINER -->
+      <div class="audio-player-box">
+        <p class="audio-title">  </p>
+        <!-- استبدل song.mp3 بملف الصوت المرفوع معك -->
+        <audio controls loop>
+          <source src="s.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="card-wrapper">
+        <div class="card-3d" id="birthdayCard">
+          <div class="card-front">
+            <div class="gift-icon">🎁</div>
+            <h2>Happy Birthday!</h2>
+          </div>
+          <div class="card-inside">
+            <div class="cake-emoji">🎂✨</div>
+            <h3>Happy Birthday My moon! 🎉</h3>
+            <p>
+              May your year be filled with joy, love, and endless happiness. alh galb 3rftkch 9bl hdak lyoum w mkanch 7aja khlaf n9dr ndirha 3la khatr b3ida 3lia 
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="btn">
+        <button id="toggleBtn" onclick="toggleCard()">Open Card ✉️</button>
+        <button onclick="showPage('page-question')">Another Surprise 💖</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: QUESTION -->
+  <div class="page" id="page-question">
+    <div class="container">
+      <div class="tenor-gif-embed" data-postid="22885016" data-share-method="host" data-aspect-ratio="1.04918" data-width="100%">
+        <a href="https://tenor.com/view/manja-gif-22885016">Manja Sticker</a>
+      </div>
+      <h1>Do you love me? 🤗</h1>
+      <p>hhhhhhhhhhhh</p>
+      <div class="btn">
+        <button onclick="showPage('page-yes')">Yes</button>
+        <button onclick="showPage('page-no1')">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: NO 1 -->
+  <div class="page" id="page-no1">
+    <div class="container">
+      <div class="tenor-gif-embed" data-postid="22050818" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+        <a href="https://tenor.com/view/mochi-gif-22050818">Mochi Sticker</a>
+      </div>
+      <h1>Please think again! 🙄</h1>
+      <p>Don't say no so quickly 😥</p>
+      <div class="btn">
+        <button onclick="showPage('page-yes')">Yes</button>
+        <button onclick="showPage('page-no2')">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: NO 2 -->
+  <div class="page" id="page-no2">
+    <div class="container">
+      <div class="tenor-gif-embed" data-postid="15195810" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+        <a href="https://tenor.com/view/couple-forgive-me-asking-for-forgiveness-begging-crying-gif-15195810">Couple Forgive Me Sticker</a>
+      </div>
+      <h1>Think one more time! 😣</h1>
+      <p>yak a 7mara awwww wslti hna tma mtbghinich</p>
+      <div class="btn">
+        <button onclick="showPage('page-yes')">Yes</button>
+        <button onclick="showPage('page-no3')">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5: NO 3 -->
+  <div class="page" id="page-no3">
+    <div class="container">
+      <div class="tenor-gif-embed" data-postid="15974530976611222074" data-share-method="host" data-aspect-ratio="1.26923" data-width="100%">
+        <a href="https://tenor.com/view/peach-goma-phone-gif-15974530976611222074">Peach Goma Phone Sticker</a>
+      </div>
+      <h1>Baby please! Don't be so tough</h1>
+      <p>خلاص بطلت منلعبش تقولي وي بسيف مكانش حل</p>
+      <div class="btn">
+        <button onclick="showPage('page-yes')">Yes</button>
+        <button id="move-random" onmouseenter="moveRandomEl(this)">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 6: YES -->
+  <div class="page" id="page-yes">
+    <div class="container">
+      <div class="tenor-gif-embed" data-postid="253027946666209433" data-share-method="host" data-aspect-ratio="1.37853" data-width="100%">
+        <a href="https://tenor.com/view/mochi-cat-mochi-and-goma-goma-and-peach-mochi-mochi-peach-cat-gif-gif-253027946666209433">Mochi Cat GIF</a>
+      </div>
+      <h1>I knew it! You Love me a lot 😘</h1>
+      <div class="btn">
+        <button onclick="showPage('page-love')">Special Secret For You 💖</button>
+        <button onclick="showPage('page-home')">Back to Home 🎁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 7: LOVE LANGUAGES -->
+  <div class="page" id="page-love">
+    <div class="container">
+      <h1>I Love You my moon in All Languages! ❤️</h1>
+      <div class="animated-love-box">
+        <span class="lang-title" id="langTitle">Arabe 🌸</span>
+        <span class="lang-phrase fade-in" id="langPhrase">i love u ❤️</span>
+      </div>
+      <div class="btn">
+        <button onclick="showPage('page-home')">Back to Home 🎁</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Navigation between pages
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    // Toggle 3D Card
+    function toggleCard() {
+      const card = document.getElementById('birthdayCard');
+      const btn = document.getElementById('toggleBtn');
+      card.classList.toggle('open');
+      if (card.classList.contains('open')) {
+        btn.innerText = 'Close Card 🔒';
+      } else {
+        btn.innerText = 'Open Card ✉️';
+      }
+    }
+
+    // Moving Random No Button
+    function moveRandomEl(elm) {
+      elm.style.position = "absolute";
+      elm.style.top = Math.floor(Math.random() * 80 + 10) + "%";
+      elm.style.left = Math.floor(Math.random() * 80 + 10) + "%";
+    }
+
+    // Dynamic Love Languages Cycle
+    const languages = [
+      { name: "Arabe 🌸", phrase: "أحبكِ يا Chiku ❤️" },
+      { name: "Anglais 🇬🇧", phrase: "I love you, Chiku" },
+      { name: "Français 🇫🇷", phrase: "Je t'aime, Chiku" },
+      { name: "Espagnol 🇪🇸", phrase: "Te amo, Chiku" },
+      { name: "Italien 🇮🇹", phrase: "Ti amo, Chiku" },
+      { name: "Allemand 🇩🇪", phrase: "Ich liebe dich, Chiku" },
+      { name: "Turc 🇹🇷", phrase: "Seni seviyorum, Chiku" },
+      { name: "Russe 🇷🇺", phrase: "Я тебя люблю, Chiku" },
+      { name: "Japonais 🇯🇵", phrase: "愛してる, Chiku" },
+      { name: "Coréen 🇰🇷", phrase: "사랑해, Chiku" },
+      { name: "Chinois 🇨🇳", phrase: "我爱你, Chiku" },
+      { name: "Hindi 🇮🇳", phrase: "मैं तुमसे प्यार करता हूँ, Chiku" },
+      { name: "Portugais 🇵🇹", phrase: "Eu te amo, Chiku" },
+      { name: "Néerlandais 🇳🇱", phrase: "Ik hou van je, Chiku" },
+      { name: "Grec 🇬🇷", phrase: "Σ' αγαπώ, Chiku" },
+      { name: "Suédois 🇸🇪", phrase: "Jag älskar dig, Chiku" },
+      { name: "Persan 🇮🇷", phrase: "دوستت دارم, Chiku" },
+      { name: "Indonésien 🇮🇩", phrase: "Aku cinta kamu, Chiku" },
+      { name: "Ourdou 🇵🇰", phrase: "میں آپ سے محبت کرتا ہوں, Chiku" },
+      { name: "Filipino 🇵🇭", phrase: "Mahal kita, Chiku" }
+    ];
+
+    let currentIndex = 0;
+    const titleEl = document.getElementById('langTitle');
+    const phraseEl = document.getElementById('langPhrase');
+
+    setInterval(() => {
+      if(titleEl && phraseEl) {
+        titleEl.classList.add('fade-out');
+        phraseEl.classList.add('fade-out');
+
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % languages.length;
+          titleEl.innerText = languages[currentIndex].name;
+          phraseEl.innerText = languages[currentIndex].phrase;
+          titleEl.classList.remove('fade-out');
+          phraseEl.classList.remove('fade-out');
+        }, 100); 
+      }
+    }, 1200);
+  </script>
+</body>
+
+</html>
